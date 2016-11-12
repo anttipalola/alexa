@@ -15,18 +15,21 @@ def fetch_news():
 
     # Need to use html5lib though it's slow, lxml parser didn't work properly
     soup = BeautifulSoup(page, "html5lib")
-
-    for el in soup.select('ul.program-list li'):
+    items = soup.select('ul.program-list li')
+    for el in items:
         identity = el.get('data-id')
 
         start = el.select('[itemprop="publication"] time')[0]\
             .get('datetime')
         name = el.select('[itemprop="name"]')[0].next_element
 
+        print("item with date", start)
         News.objects.get_or_create(external_id=identity,
                                    defaults={'created': start,
                                              'title': name
                                              })
+
+    print("created {} items".format(len(items)))
 
 
 def fetch_audio_urls():
@@ -38,6 +41,7 @@ def fetch_audio_urls():
                                created__gte=utcnow().replace(hour=0))
     for n in news:
         fetch_audio_url(n)
+    print("fetched urls for {} items".format(news.count()))
 
 
 def fetch_audio_url(news: News):
