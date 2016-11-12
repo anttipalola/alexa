@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+# Check if we are running tests
+import sys
+
+TESTING = ('test' in sys.argv or
+           'py.test' in sys.argv[0] or
+           'pytestrunner' in sys.argv[0] or
+           os.getenv('DJANGO_USE_CI_PROFILE'))
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'yle',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +91,22 @@ DATABASES = {
 }
 
 
+if TESTING:
+
+    print('Skipping migrations...')
+
+    class DisableMigrations(object):
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return "notmigrations"
+
+    MIGRATION_MODULES = DisableMigrations()
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -118,3 +144,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+####################
+# App settings
+####################
+
+# Yle
+##############
+# Yle Radio Suomi - Yle Areena 7 pv
+RADIO_LINK_BASE = 'http://areena.yle.fi/'
+RADIO_LINK = RADIO_LINK_BASE + '1-1440981'
+
+
+
+
+try:
+    LOCAL_SETTINGS
+except NameError:
+    try:
+        from .local_settings import *
+    except ImportError:
+        pass
