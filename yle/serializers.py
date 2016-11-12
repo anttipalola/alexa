@@ -8,7 +8,7 @@ from yle.models import News
 class NewsSerializer(ModelSerializer):
 
     uid = UUIDField(source='uuid')
-    updateDate = CharField(source='modified')
+    updateDate = CharField(source='created')
     titleText = CharField(source='title')
     streamUrl = CharField(source='audio_url')
     mainText = CharField(source='content')
