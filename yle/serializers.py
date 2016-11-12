@@ -1,4 +1,4 @@
-from rest_framework.fields import SerializerMethodField
+from rest_framework.fields import SerializerMethodField, DateTimeField
 from rest_framework.serializers import ModelSerializer, CharField, UUIDField
 
 from alexa.settings import RADIO_LINK_BASE
@@ -8,7 +8,7 @@ from yle.models import News
 class NewsSerializer(ModelSerializer):
 
     uid = UUIDField(source='uuid')
-    updateDate = CharField(source='created')
+    updateDate = DateTimeField(source='created')
     titleText = CharField(source='title')
     streamUrl = CharField(source='audio_url')
     mainText = CharField(source='content')
