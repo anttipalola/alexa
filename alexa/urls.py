@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from yle.urls import router as ylerouter
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include(ylerouter.urls)),
+    url(r'^', include('yle.urls')),
 ]
