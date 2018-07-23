@@ -153,7 +153,7 @@ STATIC_URL = '/static/'
 # Yle
 ##############
 # Yle Radio Suomi - Yle Areena 7 pv
-RADIO_LINK_BASE = 'http://areena.yle.fi/'
+RADIO_LINK_BASE = 'https://areena.yle.fi/'
 RADIO_LINK = RADIO_LINK_BASE + '1-1440981'
 
 

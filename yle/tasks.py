@@ -41,7 +41,11 @@ def fetch_audio_urls():
                                created__gte=utcnow().replace(hour=0))
     for n in news:
         fetch_audio_url(n)
-    print("fetched urls for {} items".format(news.count()))
+    print("tried fetching urls for {} items".format(news.count()))
+
+    news_to_delete = News.objects.filter(audio_url="")
+    print("Delete {} news without audio".format(news_to_delete.count()))
+    news_to_delete.delete()
 
 
 def fetch_audio_url(news: News):
@@ -52,7 +56,9 @@ def fetch_audio_url(news: News):
     """
     page = request.urlopen(RADIO_LINK_BASE + news.external_id)
     soup = BeautifulSoup(page, "lxml")
-    s = soup.select('div[itemprop="audio"] [itemprop="contentUrl"]')[0]
-    url = s.get('href')
-    news.audio_url = url
-    news.save(update_fields=['audio_url'])
+    s = soup.select('div[itemprop="audio"] [itemprop="contentUrl"]')
+
+    if len(s) > 0:
+        url = s[0].get('href')
+        news.audio_url = url
+        news.save(update_fields=['audio_url'])
